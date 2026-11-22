@@ -1,43 +1,576 @@
-* { box-sizing: border-box; }
-:root { --azul: #17365d; --fundo: #f3f6fb; --texto: #1c293b; --borda: #d8e1ee; }
-body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--fundo); color: var(--texto); }
-.pagina { max-width: 1250px; margin: 0 auto; padding: 28px 20px; }
-.cabecalho { margin-bottom: 24px; }
-.etiqueta { color: #2864a3; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
-h1 { margin: 10px 0; color: var(--azul); font-size: clamp(28px, 4vw, 42px); }
-p { line-height: 1.5; }
-.cabecalho p { margin: 0; color: #54647b; }
-.painel-jogo { background: white; border: 1px solid var(--borda); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px #1b35500c; }
-.barra-jogo { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding: 20px 24px; background: #e9f1fa; border-bottom: 1px solid var(--borda); }
-#contador { font-size: 19px; color: var(--azul); }
-#mensagem { margin: 5px 0 0; font-size: 14px; color: #52647b; }
-.botoes { display: flex; gap: 9px; }
-button { padding: 12px 18px; border: 1px solid var(--azul); border-radius: 8px; background: var(--azul); color: white; font-weight: 700; cursor: pointer; }
-button:hover { filter: brightness(1.12); }
-button.secundario { background: white; color: var(--azul); }
-.conteudo { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(280px, 1fr); gap: 24px; padding: 24px; }
-h2 { margin: 0 0 8px; color: var(--azul); font-size: 21px; }
-h3 { color: var(--azul); margin: 22px 0 12px; font-size: 16px; }
-.ajuda { font-size: 13px; color: #63728a; margin: 0 0 16px; }
-.rolagem-tabuleiro { max-width: 100%; overflow: auto; padding: 4px; }
-.tabuleiro { display: grid; grid-template-columns: repeat(17, 31px); grid-template-rows: repeat(20, 31px); gap: 2px; width: max-content; }
-.casa { width: 31px; height: 31px; position: relative; }
-.casa.vazia { background: transparent; }
-.casa input { width: 100%; height: 100%; border: 1px solid #8ba2bb; border-radius: 3px; background: white; text-align: center; font-size: 16px; font-weight: bold; text-transform: uppercase; color: #182c46; padding: 5px 0 0; }
-.casa input:focus { outline: 2px solid #236fcb; outline-offset: -2px; position: relative; z-index: 2; }
-.casa.selecionada input { background: #dcecff; }
-.casa.correta input { background: #bcebd0; border-color: #389a63; }
-.casa.incorreta input { background: #ffd7d7; border-color: #ce6060; }
-.numero { position: absolute; top: 2px; left: 3px; font-size: 9px; font-weight: bold; color: #425672; z-index: 1; pointer-events: none; }
-.lista-pistas { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.lista-pistas li { padding: 10px 12px; border: 1px solid var(--borda); border-radius: 8px; cursor: pointer; line-height: 1.45; font-size: 14px; }
-.lista-pistas li:hover, .lista-pistas li.ativa { background: #e8f2ff; border-color: #93b8e5; }
-.lista-pistas li.acertou { border-left: 4px solid #389a63; }
-.lista-pistas li.errou { border-left: 4px solid #ce6060; }
-.legenda { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #66758b; }
-.amostra { display: inline-block; width: 13px; height: 13px; border: 1px solid #9aa; }
-.amostra.certa { background: #bcebd0; }
-.amostra.errada { background: #ffd7d7; margin-left: 12px; }
-footer { margin: 20px 0; text-align: center; font-size: 13px; color: #7b899c; }
-@media (max-width: 850px) { .conteudo { grid-template-columns: 1fr; } }
-@media (max-width: 520px) { .pagina { padding: 14px 10px; } .conteudo { padding: 14px; } .barra-jogo { padding: 16px; } .botoes { width: 100%; } button { flex: 1; } }
+
+/* =========================================
+   CONFIGURAÇÕES GERAIS
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --azul: #17365d;
+    --fundo: #f3f6fb;
+    --texto: #1c293b;
+    --borda: #d8e1ee;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--fundo);
+    color: var(--texto);
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.pagina {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 28px 20px;
+}
+
+.cabecalho {
+    margin-bottom: 24px;
+}
+
+.etiqueta {
+    color: #2864a3;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+h1 {
+    margin: 10px 0;
+    color: var(--azul);
+    font-size: clamp(28px, 4vw, 42px);
+}
+
+h2 {
+    margin: 0 0 12px;
+    color: var(--azul);
+    font-size: 22px;
+}
+
+h3 {
+    margin: 22px 0 12px;
+    color: var(--azul);
+    font-size: 16px;
+}
+
+p {
+    line-height: 1.5;
+}
+
+.cabecalho p {
+    margin: 0;
+    color: #54647b;
+}
+
+/* =========================================
+   BOTÕES
+========================================= */
+
+button {
+    padding: 12px 18px;
+    border: 1px solid var(--azul);
+    border-radius: 8px;
+    background: var(--azul);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    filter: brightness(1.12);
+}
+
+button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+button.secundario {
+    background: white;
+    color: var(--azul);
+}
+
+.botoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+}
+
+/* =========================================
+   MENU DE NAVEGAÇÃO
+========================================= */
+
+.menu-jogos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.aba-jogo {
+    background: white;
+    color: var(--azul);
+    border-color: var(--borda);
+}
+
+.aba-jogo.ativa {
+    background: var(--azul);
+    color: white;
+    border-color: var(--azul);
+}
+
+/* =========================================
+   PAINÉIS DOS JOGOS
+========================================= */
+
+.painel-jogo {
+    background: white;
+    border: 1px solid var(--borda);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px #1b35500c;
+}
+
+/* =========================================
+   JOGO 1 - CRUZADINHA
+========================================= */
+
+.barra-jogo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding: 20px 24px;
+    background: #e9f1fa;
+    border-bottom: 1px solid var(--borda);
+}
+
+#contador {
+    font-size: 19px;
+    color: var(--azul);
+}
+
+#mensagem {
+    margin: 5px 0 0;
+    font-size: 14px;
+    color: #52647b;
+}
+
+.conteudo {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1.45fr) minmax(280px, 1fr);
+    gap: 24px;
+    padding: 24px;
+}
+
+.ajuda {
+    font-size: 13px;
+    color: #63728a;
+    margin: 0 0 16px;
+}
+
+.rolagem-tabuleiro {
+    max-width: 100%;
+    overflow: auto;
+    padding: 4px;
+}
+
+.tabuleiro {
+    display: grid;
+    grid-template-columns: repeat(17, 31px);
+    grid-template-rows: repeat(20, 31px);
+    gap: 2px;
+    width: max-content;
+}
+
+.casa {
+    width: 31px;
+    height: 31px;
+    position: relative;
+}
+
+.casa.vazia {
+    background: transparent;
+}
+
+.casa input {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #8ba2bb;
+    border-radius: 3px;
+    background: white;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #182c46;
+    padding: 5px 0 0;
+}
+
+.casa input:focus {
+    outline: 2px solid #236fcb;
+    outline-offset: -2px;
+    position: relative;
+    z-index: 2;
+}
+
+.casa.selecionada input {
+    background: #dcecff;
+}
+
+.casa.correta input {
+    background: #bcebd0;
+    border-color: #389a63;
+}
+
+.casa.incorreta input {
+    background: #ffd7d7;
+    border-color: #ce6060;
+}
+
+.numero {
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    font-size: 9px;
+    font-weight: bold;
+    color: #425672;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.lista-pistas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+.lista-pistas li {
+    padding: 10px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    cursor: pointer;
+    line-height: 1.45;
+    font-size: 14px;
+}
+
+.lista-pistas li:hover,
+.lista-pistas li.ativa {
+    background: #e8f2ff;
+    border-color: #93b8e5;
+}
+
+.lista-pistas li.acertou {
+    border-left: 4px solid #389a63;
+}
+
+.lista-pistas li.errou {
+    border-left: 4px solid #ce6060;
+}
+
+.legenda {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: #66758b;
+}
+
+.amostra {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    border: 1px solid #9aa;
+}
+
+.amostra.certa {
+    background: #bcebd0;
+}
+
+.amostra.errada {
+    background: #ffd7d7;
+    margin-left: 12px;
+}
+
+/* =========================================
+   ÁREAS DOS OUTROS MINIGAMES
+========================================= */
+
+.cabecalho-minigame {
+    padding: 24px 24px 10px;
+}
+
+.cabecalho-minigame p {
+    margin: 8px 0;
+    color: #54647b;
+}
+
+.area-minigame {
+    padding: 18px 24px 28px;
+}
+
+.linha-informacoes {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--azul);
+    margin-bottom: 18px;
+}
+
+.feedback-jogo {
+    min-height: 24px;
+    color: #52647b;
+}
+
+.missao {
+    background: #e9f1fa;
+    border: 1px solid var(--borda);
+    padding: 14px;
+    border-radius: 10px;
+    margin: 16px 0;
+}
+
+/* =========================================
+   JOGO 2 - LABORATÓRIO LÓGICO
+========================================= */
+
+.circuito-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    background: #f6f9fe;
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    padding: 25px 10px;
+    overflow-x: auto;
+}
+
+.entradas-visuais {
+    display: grid;
+    gap: 12px;
+    min-width: 64px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.fio {
+    height: 3px;
+    background: #7898bc;
+    width: clamp(20px, 6vw, 75px);
+    flex-shrink: 0;
+}
+
+.porta-visual {
+    display: grid;
+    place-items: center;
+    min-width: 110px;
+    min-height: 84px;
+    padding: 12px;
+    border: 3px solid #2864a3;
+    border-radius: 18px;
+    background: #dcecff;
+    color: #17365d;
+    font-weight: bold;
+    font-size: 19px;
+    text-align: center;
+    white-space: pre-line;
+}
+
+.saida-visual {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.saida-visual strong {
+    font-size: 26px;
+}
+
+.led {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #9ca3af;
+}
+
+.led.ligado {
+    background: #22c55e;
+    box-shadow: 0 0 0 4px #22c55e30;
+}
+
+.controles-entradas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 18px 0;
+}
+
+.controle-entrada {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: #f6f9fe;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+}
+
+.controle-entrada button {
+    min-width: 100px;
+}
+
+.controle-entrada button.ligado {
+    background: #167d49;
+    border-color: #167d49;
+}
+
+/* =========================================
+   JOGO 3 - DESAFIO BINÁRIO
+========================================= */
+
+.bin-bits {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 9px;
+    margin: 20px 0;
+}
+
+.bin-bit {
+    min-width: 0;
+    display: grid;
+    gap: 9px;
+    justify-items: center;
+    padding: 14px 4px;
+    border: 1px solid var(--borda);
+    border-radius: 10px;
+    background: #f6f9fe;
+}
+
+.bin-bit span {
+    font-size: 12px;
+    color: #52647b;
+}
+
+.bin-bit button {
+    width: 100%;
+    max-width: 75px;
+    padding: 15px 4px;
+    font-size: 22px;
+}
+
+.bin-bit button.ativo {
+    background: #167d49;
+    border-color: #167d49;
+}
+
+.bin-resultado {
+    background: #e9f1fa;
+    border-radius: 10px;
+    padding: 8px 16px;
+    margin-bottom: 15px;
+}
+
+.bin-resultado p {
+    margin: 8px 0;
+}
+
+#bin-formado {
+    font-family: monospace;
+    font-size: 22px;
+    letter-spacing: 3px;
+}
+
+/* =========================================
+   RODAPÉ
+========================================= */
+
+footer {
+    margin: 20px 0;
+    text-align: center;
+    font-size: 13px;
+    color: #7b899c;
+}
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 850px) {
+
+    .conteudo {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 520px) {
+
+    .pagina {
+        padding: 14px 10px;
+    }
+
+    .conteudo {
+        padding: 14px;
+    }
+
+    .barra-jogo {
+        padding: 16px;
+    }
+
+    .botoes {
+        width: 100%;
+    }
+
+    .area-minigame {
+        padding: 14px;
+    }
+
+    .porta-visual {
+        min-width: 84px;
+        font-size: 15px;
+    }
+
+    .fio {
+        width: 20px;
+    }
+
+    .bin-bits {
+        gap: 3px;
+    }
+
+    .bin-bit {
+        padding: 9px 1px;
+        gap: 5px;
+    }
+
+    .bin-bit span {
+        font-size: 10px;
+    }
+
+    .bin-bit button {
+        font-size: 16px;
+        padding: 12px 1px;
+    }
+
+    #bin-formado {
+        font-size: 17px;
+        letter-spacing: 1px;
+    }
+
+}
