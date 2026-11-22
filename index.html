@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArqComp | Cruzadinha</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="pagina">
+    <header class="cabecalho">
+      <span class="etiqueta">SPTech · Arquitetura Computacional</span>
+      <h1>ArqComp: Cruzadinha</h1>
+      <p>Revise os conceitos da Sprint 3 enquanto descobre as palavras.</p>
+    </header>
+
+    <section class="painel-jogo" aria-label="Jogo de palavras cruzadas">
+      <div class="barra-jogo">
+        <div>
+          <strong id="contador">0 de 16 palavras corretas</strong>
+          <p id="mensagem" aria-live="polite">Clique em uma casa e digite a resposta da pista.</p>
+        </div>
+        <div class="botoes">
+          <button id="botao-conferir" type="button">Conferir</button>
+          <button id="botao-reiniciar" type="button" class="secundario">Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="conteudo">
+        <div class="area-tabuleiro">
+          <h2>Tabuleiro</h2>
+          <p class="ajuda">Clique numa casa para selecionar a palavra. Clique novamente para mudar a direção.</p>
+          <div class="rolagem-tabuleiro">
+            <div id="tabuleiro" class="tabuleiro" role="group" aria-label="Tabuleiro da cruzadinha"></div>
+          </div>
+          <p class="legenda"><span class="amostra certa"></span> Palavra correta <span class="amostra errada"></span> Palavra incorreta</p>
+        </div>
+
+        <aside class="area-pistas">
+          <h2>Pistas</h2>
+          <h3>Horizontais</h3>
+          <ol id="pistas-horizontais" class="lista-pistas"></ol>
+          <h3>Verticais</h3>
+          <ol id="pistas-verticais" class="lista-pistas"></ol>
+        </aside>
+      </div>
+    </section>
+    <footer>Estude CPU, memórias, barramentos e processamento — uma palavra por vez.</footer>
+  </main>
+</body>
+</html>
